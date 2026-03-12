@@ -2,7 +2,7 @@
 
 ## Overview
 This project develops a semantic literature filtering system for scientific research papers using pretrained sentence embeddings.
-Research paper abstracts are collected from the arXiv API (cs.LG category). The system calculates the semantic similarity between the user-defined topic and each paper abstract using Sentence-BERT embeddings and the cosine similarity measure.
+Research paper abstracts are collected from the arXiv API (cs.LG category). The system calculates the semantic similarity between the user-defined topic and each paper abstract using SPECTER emmbeddings and cross-encoder similarity score.
 
 The goal is to help with literature filtering by scoring research papers that are semantically similar to a research question.
 
@@ -15,12 +15,15 @@ The goal is to help with literature filtering by scoring research papers that ar
    - Metadata extracted: id, title, summary(abstract), categories, publication date
 
 2. **Text Embeddings**
-   - Sentence embeddings generated using `all-MiniLM-L6-v2` (Sentence-BERT)
+   - Embeddings generated using:
+      - SBERT `all-MiniLM-L6-v2` (Sentence-BERT)
+      - SPECTER `allenai-specter` (Scientific Paper Embeddings using Citation-informed TransformERs)
 
 3. **Relevance Scoring**
    - Cosine similarity between:
      - User topic embedding
      - Paper abstract embedding
+   - Cross Encoder Reranking
 
 4. **Ranking**
    - Papers sorted by semantic similarity score
@@ -35,6 +38,31 @@ The goal is to help with literature filtering by scoring research papers that ar
 - scikit-learn
 - Pandas
 - NumPy
+
+---
+
+## Project Structure
+
+```
+scientific-literature-filtering/
+
+│
+├── data/
+│   ├── processed/
+│   └── raw/
+│
+├── notebooks/
+│   ├── 01_data_collection_and_eda.ipynb
+│   ├── 02_semantic_ranking_pipeline.ipynb
+│   └── 03_cross_encoder_reranking.ipynb
+│
+├── src/
+│   ├── __init__.py
+│   └── retrieval.py
+│
+├── README.md
+└── requirements.txt
+```
 
 ---
 
