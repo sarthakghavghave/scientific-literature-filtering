@@ -42,7 +42,7 @@ def category_score(categories, preferred_category):
     
     return 0
 
-def rerank_with_cross_encoder(query, df, embeddings, bi_encoder, cross_encoder, k=20, preferred_category=None):
+def rerank_with_cross_encoder(query, df, embeddings, bi_encoder, cross_encoder, preferred_category=None):
     """
     Two-stage retrieval pipeline.
     Stage 1 - Bi-encoder: fast candidate retrieval using cosine similarity.
@@ -50,7 +50,7 @@ def rerank_with_cross_encoder(query, df, embeddings, bi_encoder, cross_encoder, 
     """
     
     # Bi-encoder Retrieval
-    candidates = retrieve_top_k(query=query, preferred_category=preferred_category, df=df, embeddings=embeddings, model=bi_encoder, k=k)
+    candidates = retrieve_top_k(query=query, preferred_category=preferred_category, df=df, embeddings=embeddings, model=bi_encoder, k=20)
     
     # Cross-encoder reranking
     pairs = [(query, text) for text in candidates["summary"]]
