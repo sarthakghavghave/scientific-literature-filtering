@@ -31,7 +31,7 @@ The goal is to help with literature filtering by scoring research papers that ar
 ## Tech Stack
 
 - Python
-- Sentence-Transformers (SBERT)
+- Sentence-Transformers
 - scikit-learn
 - Pandas
 - NumPy
