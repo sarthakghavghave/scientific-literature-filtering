@@ -60,6 +60,7 @@ scientific-literature-filtering/
 │   ├── __init__.py
 │   └── retrieval.py
 │
+├── app.py
 ├── README.md
 └── requirements.txt
 ```
@@ -77,3 +78,4 @@ scientific-literature-filtering/
 
 Paper metadata and abstracts are retrieved from the arXiv API.
 This project uses arXiv data solely for academic and educational purposes.
+public api source - https://info.arxiv.org/help/api/basics.html
