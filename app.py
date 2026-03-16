@@ -12,6 +12,7 @@ st.set_page_config(
     layout="wide"
 )
 
+# Loading data into cache for performance improvement
 @st.cache_resource
 def load_model():
     return SentenceTransformer("allenai-specter")
@@ -35,22 +36,35 @@ cross_encoder = load_encoder()
 embeddings = load_embeddings()
 
 
+# User input
 query = st.text_input("Enter Query")
-category = st.selectbox("Preferred Category", ["None","cs.LG","cs.CV","stat.ML","hep-ex","cs.CR","cs.NI","cs.IR","eess.IV","cs.SI"])
+categories = ["None","Machine Learning","Artificial Intelligance","NLP","Image and Video Processing","Cryptography and Security"]
+category = st.selectbox("Preferred Category", categories)
 year = st.selectbox("Prefered Year", ["None", "2020", "2019"])
-k = st.slider("Number of results", 1, 50, 10)
+k = st.slider("Number of results", 5, 20, 10)
+
+# Category mapping
+mapping = {
+    "Machine Learning": "cs.LG",
+    "Artificial Intelligance": "cs.AI",
+    "Computer Vision": "cs.CV",
+    "Image and Video Processing": "eess.IV",
+    "NLP": "cs.CL"
+}
+category = [mapping.get(x, x) for x in category]
+
 
 if query:
     results = rerank_with_cross_encoder(query, df, embeddings, model, cross_encoder, category)
     results = results.head(k)
 
-    if year is not "None":
-        results = results[results['published'] == year]
+    if year != "None":
+        results = results[results['published'] == int(year)]
 
     for _, row in results.iterrows():
 
             st.subheader(row["title"])
-            st.write("Score:", round(row["final_score"],3))
+            st.write("Score:", round(row["cross_score"],3))
             st.write("Category:", ", ".join(row["category"].split("|")))
             st.write("Published Year: ", row['published'])
 
