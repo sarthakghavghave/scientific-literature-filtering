@@ -15,7 +15,7 @@ st.set_page_config(
 # Loading data into cache for performance improvement
 @st.cache_resource
 def load_model():
-    return SentenceTransformer("allenai-specter")
+    return SentenceTransformer("all-MiniLM-L6-v2")
 
 @st.cache_resource
 def load_encoder():
@@ -27,7 +27,7 @@ def load_data():
 
 @st.cache_data
 def load_embeddings():
-    return np.load("data/processed/specter_embeddings.npy")
+    return np.load("data/processed/sbert_embeddings.npy")
 
 st.title("Scientific Literature Semantic Search")
 df = load_data()
@@ -36,26 +36,29 @@ cross_encoder = load_encoder()
 embeddings = load_embeddings()
 
 
+# Category mapping
+category_mapping = {
+    "None": "None",
+    "Machine Learning": "cs.LG",
+    "Artificial Intelligence": "cs.AI",
+    "Computer Vision": "cs.CV",
+    "Natural Language Processing": "cs.CL",
+    "Image and Video Processing": "eess.IV",
+    "Cryptography and Security": "cs.CR"
+}
+
 # User input
 query = st.text_input("Enter Query")
-categories = ["None","Machine Learning","Artificial Intelligance","NLP","Image and Video Processing","Cryptography and Security"]
-category = st.selectbox("Preferred Category", categories)
+category_display = st.selectbox("Preferred Category", list(category_mapping.keys()))
 year = st.selectbox("Prefered Year", ["None", "2020", "2019"])
 k = st.slider("Number of results", 5, 20, 10)
 
-# Category mapping
-mapping = {
-    "Machine Learning": "cs.LG",
-    "Artificial Intelligance": "cs.AI",
-    "Computer Vision": "cs.CV",
-    "Image and Video Processing": "eess.IV",
-    "NLP": "cs.CL"
-}
-category = [mapping.get(x, x) for x in category]
+category_code = category_mapping[category_display]
 
+reverse_mapping = {v: k for k, v in category_mapping.items()}
 
 if query:
-    results = rerank_with_cross_encoder(query, df, embeddings, model, cross_encoder, category)
+    results = rerank_with_cross_encoder(query, df, embeddings, model, cross_encoder, category_code)
     results = results.head(k)
 
     if year != "None":
@@ -65,7 +68,7 @@ if query:
 
             st.subheader(row["title"])
             st.write("Score:", round(row["cross_score"],3))
-            st.write("Category:", ", ".join(row["category"].split("|")))
+            st.write("Category:", ", ".join(reverse_mapping.get(x, x) for x in row["category"].split("|")))
             st.write("Published Year: ", row['published'])
 
             arxiv_id = row["id"].split("/")[-1]

@@ -4,5 +4,6 @@ venv/
 .env
 .venv/
 data/raw/
-data/processed/
-data/processed/*.npy
+data/processed/specter_embeddings.npy
+!data/processed/arxiv_papers.csv
+!data/processed/sbert_embeddings.npy
