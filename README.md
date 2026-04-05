@@ -1,10 +1,12 @@
-# Scientific Literature Filtering
+# Scientific Literature Filtering (SciRank)
 
 ## Overview
-This project develops a semantic literature filtering system for scientific research papers using pretrained sentence embeddings.
-Research paper abstracts are collected from the arXiv API (cs.LG category). The system calculates the semantic similarity between the user-defined topic and each paper abstract using SPECTER emmbeddings and cross-encoder similarity score.
+A semantic literature search system for scientific research papers using pretrained sentence embeddings.
+The system uses SBERT for fast candidate retrieval and a cross-encoder (MS MARCO) for accurate reranking.
 
-The goal is to help with literature filtering by scoring research papers that are semantically similar to a research question.
+The goal is to assist in literature filtering by using semantic similarity instead of keyword-based approachs.
+
+Streamlit URL: https://semantic-lit-search.streamlit.app/
 
 ---
 
@@ -19,15 +21,25 @@ The goal is to help with literature filtering by scoring research papers that ar
       - SBERT `all-MiniLM-L6-v2` (Sentence-BERT)
       - SPECTER `allenai-specter` (Scientific Paper Embeddings using Citation-informed TransformERs)
 
-3. **Relevance Scoring**
+3. **Candidate Retrieval**
    - Cosine similarity between:
      - User topic embedding
      - Paper abstract embedding
-   - Cross Encoder Reranking
 
-4. **Ranking**
+4. **Reranking**
+   - Cross Encoder Reranking
+     - MS-MARCO `cross-encoder/ms-marco-MiniLM-L-6-v2`
    - Papers sorted by semantic similarity score
-   - Optional filtering based on score threshold
+
+---
+
+## Key Features
+
+- Semantic search using SBERT embeddings
+- Two-stage retrieval pipeline (bi-encoder + cross-encoder)
+- Improved ranking using MS MARCO cross-encoder
+- Category-based filtering
+- Interactive Streamlit interface
 
 ---
 
@@ -38,6 +50,15 @@ The goal is to help with literature filtering by scoring research papers that ar
 - scikit-learn
 - Pandas
 - NumPy
+
+---
+
+## Models Used
+
+- SBERT: `all-MiniLM-L6-v2` (bi-encoder for fast retrieval)
+- Cross-Encoder: `ms-marco-MiniLM-L-6-v2` (reranking)
+- TF-IDF: baseline comparison
+- SPECTER: comparitive study
 
 ---
 
