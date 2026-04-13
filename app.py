@@ -3,8 +3,6 @@ import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from sentence_transformers import CrossEncoder
-
-# Retrieval function
 from src.retrieval import retrieve_top_k, rerank
 
 st.set_page_config(
@@ -12,7 +10,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Loading data into cache
 @st.cache_resource
 def load_model():
     return SentenceTransformer("all-MiniLM-L6-v2")
@@ -29,7 +26,7 @@ def load_data():
 def load_embeddings():
     return np.load("data/processed/sbert_embeddings.npy")
 
-st.header("SciRank")
+st.header("Sci-Rank")
 st.subheader("Semantic Search for Scientific Literature")
 
 st.markdown("""
@@ -43,7 +40,6 @@ with st.spinner("Loading..."):
     cross_encoder = load_encoder()
     embeddings = load_embeddings()
 
-# Category mapping
 category_mapping = {
     "All": "None",
     "Machine Learning": "cs.LG",
@@ -54,7 +50,6 @@ category_mapping = {
     "Cryptography and Security": "cs.CR"
 }
 
-# User input
 query = st.text_input("Enter Query")
 category_display = st.selectbox("Preferred Category", list(category_mapping.keys()))
 year = st.selectbox("Prefered Year", ["All", "2020", "2019"])

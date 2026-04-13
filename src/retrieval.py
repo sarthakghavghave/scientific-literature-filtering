@@ -3,14 +3,10 @@ import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import normalize
 
-# Retrieve top k results for a query
 def retrieve_top_k(query, preferred_category, df, embeddings, model, k):
-
     df_scored = compute_scores(query, preferred_category, df, embeddings, model)
-
     return df_scored.sort_values(by='bi_score', ascending=False).head(k)
 
-# Compute cosine similarity scores and category-based scores
 def compute_scores(query, preferred_category, df, embeddings, model):
 
     query_embedding = model.encode([query])
@@ -22,14 +18,12 @@ def compute_scores(query, preferred_category, df, embeddings, model):
     df_temp['bi_score'] = scores
     
     if preferred_category != "None":
-
         df_temp["cat_score"] = df_temp["category"].apply(lambda x: category_score(x, preferred_category))
-
         df_temp['bi_score'] = 0.9 * df_temp['bi_score'] + 0.1 * df_temp['cat_score']
     
     return df_temp
 
-# Category-based scoring
+
 def category_score(categories, preferred_category):
     category_list = categories.split("|")
 
@@ -38,9 +32,9 @@ def category_score(categories, preferred_category):
     
     return 0
 
+
 def rerank(query, candidates, cross_encoder):
     
-    # Cross-encoder reranking
     pairs = [(query, text) for text in candidates["combined"]]
     cross_scores = cross_encoder.predict(pairs)
     
